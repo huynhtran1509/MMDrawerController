@@ -328,6 +328,8 @@ static NSString *MMDrawerOpenSideKey = @"MMDrawerOpenSide";
 -(void)openDrawerSide:(MMDrawerSide)drawerSide animated:(BOOL)animated completion:(void (^)(BOOL finished))completion{
     NSParameterAssert(drawerSide != MMDrawerSideNone);
     
+    [self dismissKeyboard];
+    
     [self openDrawerSide:drawerSide animated:animated velocity:self.animationVelocity animationOptions:UIViewAnimationOptionCurveEaseInOut completion:completion];
 }
 
@@ -1123,6 +1125,10 @@ static NSString *MMDrawerOpenSideKey = @"MMDrawerOpenSide";
         default:
             break;
     }
+    
+    if(panGesture.state == UIGestureRecognizerStateRecognized) {
+        [self dismissKeyboard];
+    }
 }
 
 #pragma mark - iOS 7 Status Bar Helpers
@@ -1357,6 +1363,10 @@ static inline CGFloat originXForDrawerOriginAndTargetOriginOffset(CGFloat origin
             break;
     }
     return childViewController;
+}
+
+- (void)dismissKeyboard {
+    [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
 }
 
 #pragma mark - UIGestureRecognizerDelegate
